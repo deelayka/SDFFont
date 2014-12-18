@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace SDFFont
 {
@@ -14,28 +15,36 @@ namespace SDFFont
 
             int ss = inSize / outSize;
 
-            var data = new byte[4096, 4096];
+            var data = new byte[inSize, inSize];
+            var raw = new byte[inSize * inSize * 3];
 
-            RectangleF rectf = new RectangleF(0, 0, 4096, 4096);
-            using (var bmp = new Bitmap(4096, 4096, PixelFormat.Format24bppRgb))
+            var rectf = new RectangleF(0, 0, inSize, inSize);
+            var rect = new Rectangle(0, 0, inSize, inSize);
+            var sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+
+            using (var bmp = new Bitmap(inSize, inSize, PixelFormat.Format24bppRgb))
             {
                 using (var g = Graphics.FromImage(bmp))
                 {
-                    g.FillRectangle(Brushes.White, 0, 0, 4096, 4096);
-                    g.DrawString("A", new Font("Lucida Console", 3000), Brushes.Black, rectf);
-                    g.Flush();
+                    g.FillRectangle(Brushes.White, 0, 0, inSize, inSize);
+                    g.DrawString("A", new Font("Lucida Console", inSize * 3 / 4), Brushes.Black, rectf, sf);
                 }
-
 
                 bmp.Save("D:\\f.png");
 
-                for (int y = 0; y < 4096; y++)
-                    for (int x = 0; x < 4096; x++)
-                    {
-                        var px = bmp.GetPixel(x, y);
-                        data[x, y] = px.R;
-                    }
+                var bits = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                Marshal.Copy(bits.Scan0, raw, 0, raw.Length);
+                bmp.UnlockBits(bits);
             }
+
+            int k = 0;
+            for (int y = 0; y < inSize; y++)
+                for (int x = 0; x < inSize; x++)
+                {
+                    data[x, y] = raw[k];
+                    k += 3;
+                }
 
             var bmp2 = new Bitmap(outSize, outSize, PixelFormat.Format32bppArgb);
             for (int y = 0; y < outSize; y++)
@@ -51,8 +60,8 @@ namespace SDFFont
                             var yj = y * ss + ss / 2 + j;
                             if (xi < 0) xi = 0;
                             if (yj < 0) yj = 0;
-                            if (xi > 4095) xi = 4095;
-                            if (yj > 4095) yj = 4095;
+                            if (xi >= inSize) xi = inSize - 1;
+                            if (yj >= inSize) yj = inSize - 1;
 
                             bool isInner = data[xi, yj] < 128;
 
