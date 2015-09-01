@@ -6,9 +6,10 @@ namespace SDFFont
 {
     class FontRasterizer
     {
-        public void Rasterize(Raster raster, string symbol)
+        public Raster Rasterize(string symbol, int size)
         {
-            var size = raster.Size;
+            Raster raster = new Raster(size);
+
             using (var bitmap = new Bitmap(size, size, PixelFormat.Format24bppRgb))
             {
                 var raw = new byte[size * size * 3];
@@ -36,6 +37,8 @@ namespace SDFFont
                         k += 3;
                     }
             }
+
+            return raster;
         }
     }
 }
