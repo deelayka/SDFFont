@@ -27,7 +27,7 @@ namespace SDFFont
 
                         var raster = font.Rasterize(letter);
 
-                        var fragment = sdf.Process(raster, inSize, outSize, distance, ss);
+                        var fragment = sdf.Process2(raster, inSize, outSize, distance, ss);
 
                         atlas.Draw(fragment, cx * outSize, cy * outSize);
                     }
