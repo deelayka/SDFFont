@@ -18,7 +18,7 @@ namespace SDFFont
 
             using (var font = new FontRasterizer(inSize))
             {
-                ISDF sdf = new SDFLinear();
+                ISDF sdf = new SDFLinear(inSize);
                 var raster = new Raster(inSize);
                 var fragment = new Raster(outSize);
 

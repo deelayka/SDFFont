@@ -4,13 +4,19 @@ namespace SDFFont
 {
     class SDFLinear : ISDF
     {
+        private readonly short[,] _distx;
+        private readonly short[,] _disty;
+
+        public SDFLinear(int inSize)
+        {
+            _distx = new short[inSize, inSize];
+            _disty = new short[inSize, inSize];
+        }
+
         public void Process(Raster input, Raster output, int inSize, int outSize, int distance, int ss)
         {
-            var distx = new short[inSize, inSize];
-            var disty = new short[inSize, inSize];
-
-            ProcessForward(input, output, inSize, distance, ss, distx, disty);
-            ProcessBackward(input, output, inSize, distance, ss, distx, disty);
+            ProcessForward(input, output, inSize, distance, ss, _distx, _disty);
+            ProcessBackward(input, output, inSize, distance, ss, _distx, _disty);
         }
 
         void ProcessForward(Raster input, Raster output, int inSize, int distance, int ss, short[,] distx, short[,] disty)
@@ -145,10 +151,7 @@ namespace SDFFont
                         if (v > 255)
                             v = 255;
 
-                        var b = (byte)v;
-                        var b1 = output.Data[y / ss, x / ss];
-
-                        output.Data[y / ss, x / ss] = b;
+                        output.Data[y / ss, x / ss] = (byte)v;
                     }
                 }
         }
