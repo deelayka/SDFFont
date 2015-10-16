@@ -40,7 +40,7 @@ namespace SDFFont
             for (int y = 0; y < _size; y++)
                 for (int x = 0; x < _size; x++)
                 {
-                    raster.Data[x, y] = _raw[k];
+                    raster.Data[y, x] = _raw[k];
                     k += 3;
                 }
         }

@@ -29,7 +29,7 @@ namespace SDFFont
         {
             for (int y = 0; y < fragment.Size; y++)
                 for (int x = 0; x < fragment.Size; x++)
-                    Data[x1 + x, y1 + y] = fragment.Data[x, y];
+                    Data[y1 + y, x1 + x] = fragment.Data[y, x];
         }
 
         internal void Save(string filename)
@@ -39,9 +39,9 @@ namespace SDFFont
             for (int y = 0; y < Size; y++)
                 for (int x = 0; x < Size; x++)
                 {
-                    data[0 + 4 * (x + y * Size)] = Data[x, y];
-                    data[1 + 4 * (x + y * Size)] = Data[x, y];
-                    data[2 + 4 * (x + y * Size)] = Data[x, y];
+                    data[0 + 4 * (x + y * Size)] = Data[y, x];
+                    data[1 + 4 * (x + y * Size)] = Data[y, x];
+                    data[2 + 4 * (x + y * Size)] = Data[y, x];
                     data[3 + 4 * (x + y * Size)] = 255;
                 }
 

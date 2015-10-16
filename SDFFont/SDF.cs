@@ -9,7 +9,7 @@ namespace SDFFont
             for (int y = 0; y < outSize; y++)
                 for (int x = 0; x < outSize; x++)
                 {
-                    bool inner = input.Data[x * ss + ss / 2, y * ss + ss / 2] < 128;
+                    bool inner = input.Data[y * ss + ss / 2, x * ss + ss / 2] < 128;
                     var minDistance = inner ? int.MaxValue : int.MinValue;
 
                     for (int j = -distance; j <= distance; j++)
@@ -20,7 +20,7 @@ namespace SDFFont
                             if (xi < 0 || yj < 0 || xi >= inSize || yj >= inSize)
                                 continue;
 
-                            bool isInner = input.Data[xi, yj] < 128;
+                            bool isInner = input.Data[yj, xi] < 128;
 
                             if (inner != isInner)
                             {
@@ -41,7 +41,7 @@ namespace SDFFont
                         v = 0;
                     if (v > 255)
                         v = 255;
-                    output.Data[x, y] = (byte)v;
+                    output.Data[y, x] = (byte)v;
                 }
         }
 
@@ -59,7 +59,7 @@ namespace SDFFont
             for (int y = 0; y < inSize; y++)
                 for (int x = 0; x < inSize; x++)
                 {
-                    bool inner = input.Data[x, y] < 128;
+                    bool inner = input.Data[y, x] < 128;
                     var minDistance = inner ? int.MaxValue : int.MinValue;
                     int mx = -distance;
                     int my = -distance;
@@ -82,12 +82,12 @@ namespace SDFFont
                         if (rx < 0 || rx >= inSize || ry < 0 || ry >= inSize)
                             continue;
 
-                        bool inner2 = input.Data[rx, ry] < 128;
+                        bool inner2 = input.Data[ry, rx] < 128;
 
                         if (inner == inner2)
                         {
-                            dx += distx[rx, ry];
-                            dy += disty[rx, ry];
+                            dx += distx[ry, rx];
+                            dy += disty[ry, rx];
                         }
 
                         var ddd = dx * dx + dy * dy;
@@ -110,8 +110,8 @@ namespace SDFFont
                     if (mx < short.MinValue) mx = short.MinValue;
                     if (my > short.MaxValue) my = short.MaxValue;
                     if (my < short.MinValue) my = short.MinValue;
-                    distx[x, y] = (short)mx;
-                    disty[x, y] = (short)my;
+                    distx[y, x] = (short)mx;
+                    disty[y, x] = (short)my;
                 }
         }
 
@@ -120,7 +120,7 @@ namespace SDFFont
             for (int y = inSize - 1; y >= 0; y--)
                 for (int x = inSize - 1; x >= 0; x--)
                 {
-                    bool inner = input.Data[x, y] < 128;
+                    bool inner = input.Data[y, x] < 128;
                     var minDistance = inner ? int.MaxValue : int.MinValue;
                     int mx = distance;
                     int my = distance;
@@ -144,12 +144,12 @@ namespace SDFFont
                         if (rx < 0 || rx >= inSize || ry < 0 || ry >= inSize)
                             continue;
 
-                        bool inner2 = input.Data[rx, ry] < 128;
+                        bool inner2 = input.Data[ry, rx] < 128;
 
                         if (inner == inner2)
                         {
-                            dx += distx[rx, ry];
-                            dy += disty[rx, ry];
+                            dx += distx[ry, rx];
+                            dy += disty[ry, rx];
                         }
 
                         var ddd = dx * dx + dy * dy;
@@ -172,8 +172,8 @@ namespace SDFFont
                     if (mx < short.MinValue) mx = short.MinValue;
                     if (my > short.MaxValue) my = short.MaxValue;
                     if (my < short.MinValue) my = short.MinValue;
-                    distx[x, y] = (short)mx;
-                    disty[x, y] = (short)my;
+                    distx[y, x] = (short)mx;
+                    disty[y, x] = (short)my;
 
                     if (x % ss == ss / 2 && y % ss == ss / 2)
                     {
@@ -187,9 +187,9 @@ namespace SDFFont
                             v = 255;
 
                         var b = (byte)v;
-                        var b1 = output.Data[x / ss, y / ss];
+                        var b1 = output.Data[y / ss, x / ss];
 
-                        output.Data[x / ss, y / ss] = b;
+                        output.Data[y / ss, x / ss] = b;
                     }
                 }
         }
