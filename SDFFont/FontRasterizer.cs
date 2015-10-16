@@ -7,32 +7,37 @@ namespace SDFFont
 {
     class FontRasterizer : IDisposable
     {
-        private Bitmap _bitmap;
-        private int _size;
-        private byte[] _raw;
+        private readonly Bitmap _bitmap;
+        private readonly int _size;
+        private readonly byte[] _raw;
+
+        private readonly Font _font;
+        private readonly RectangleF _rectangleF;
+        private readonly Rectangle _rectangle;
+        private readonly StringFormat _format;
 
         public FontRasterizer(int size)
         {
             _size = size;
             _bitmap = new Bitmap(_size, _size, PixelFormat.Format24bppRgb);
             _raw = new byte[_size * _size * 3];
+
+            _font = new Font("Lucida Console", _size * 3 / 4);
+            _rectangleF = new RectangleF(0, 0, _size, _size);
+            _rectangle = new Rectangle(0, 0, _size, _size);
+            _format = new StringFormat();
+            _format.Alignment = StringAlignment.Center;
         }
 
         public void Rasterize(Raster raster, string symbol)
         {
-            var rectf = new RectangleF(0, 0, _size, _size);
-            var rect = new Rectangle(0, 0, _size, _size);
-
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-
             using (var g = Graphics.FromImage(_bitmap))
             {
-                g.FillRectangle(Brushes.White, rect);
-                g.DrawString(symbol, new Font("Lucida Console", _size * 3 / 4), Brushes.Black, rectf, sf);
+                g.FillRectangle(Brushes.White, _rectangle);
+                g.DrawString(symbol, _font, Brushes.Black, _rectangleF, _format);
             }
 
-            var bits = _bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            var bits = _bitmap.LockBits(_rectangle, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             Marshal.Copy(bits.Scan0, _raw, 0, _raw.Length);
             _bitmap.UnlockBits(bits);
 
