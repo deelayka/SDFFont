@@ -16,6 +16,7 @@ namespace SDFFont
             using (var font = new FontRasterizer(inSize))
             {
                 var sdf = new SDF();
+                var raster = new Raster(inSize);
 
                 var atlas = new Raster(outSize * 16);
 
@@ -25,7 +26,7 @@ namespace SDFFont
                         Console.WriteLine("{0}/256 complete.", (cx + 16 * cy));
                         string letter = Encoding.GetEncoding(1251).GetString(new byte[] { (byte)(cx + 16 * cy) });
 
-                        var raster = font.Rasterize(letter);
+                        font.Rasterize(raster, letter);
 
                         var fragment = sdf.Process2(raster, inSize, outSize, distance, ss);
 

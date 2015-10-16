@@ -18,10 +18,8 @@ namespace SDFFont
             _raw = new byte[_size * _size * 3];
         }
 
-        public Raster Rasterize(string symbol)
+        public void Rasterize(Raster raster, string symbol)
         {
-            Raster raster = new Raster(_size);
-
             var rectf = new RectangleF(0, 0, _size, _size);
             var rect = new Rectangle(0, 0, _size, _size);
 
@@ -45,8 +43,6 @@ namespace SDFFont
                     raster.Data[x, y] = _raw[k];
                     k += 3;
                 }
-
-            return raster;
         }
 
         public void Dispose()
