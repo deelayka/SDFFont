@@ -43,10 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FontRasterizer.cs" />
+    <Compile Include="ISDF.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raster.cs" />
-    <Compile Include="SDF.cs" />
+    <Compile Include="SDFBruteforce.cs" />
+    <Compile Include="SDFLinear.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
