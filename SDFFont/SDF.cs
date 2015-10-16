@@ -4,10 +4,8 @@ namespace SDFFont
 {
     class SDF
     {
-        public Raster Process(Raster input, int inSize, int outSize, int distance, int ss)
+        public void Process(Raster input, Raster output, int inSize, int outSize, int distance, int ss)
         {
-            var output = new Raster(outSize);
-
             for (int y = 0; y < outSize; y++)
                 for (int x = 0; x < outSize; x++)
                 {
@@ -45,20 +43,15 @@ namespace SDFFont
                         v = 255;
                     output.Data[x, y] = (byte)v;
                 }
-            return output;
         }
 
-        public Raster Process2(Raster input, int inSize, int outSize, int distance, int ss)
+        public void Process2(Raster input, Raster output, int inSize, int outSize, int distance, int ss)
         {
-            var output = new Raster(outSize);
-
             var distx = new short[inSize, inSize];
             var disty = new short[inSize, inSize];
 
             Process2Forward(input, output, inSize, distance, ss, distx, disty);
             Process2Backward(input, output, inSize, distance, ss, distx, disty);
-
-            return output;
         }
 
         void Process2Forward(Raster input, Raster output, int inSize, int distance, int ss, short[,] distx, short[,] disty)

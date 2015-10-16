@@ -20,6 +20,7 @@ namespace SDFFont
             {
                 var sdf = new SDF();
                 var raster = new Raster(inSize);
+                var fragment = new Raster(outSize);
 
                 var atlas = new Raster(outSize * 16);
 
@@ -33,7 +34,7 @@ namespace SDFFont
 
                         font.Rasterize(raster, letter);
 
-                        var fragment = sdf.Process2(raster, inSize, outSize, distance, ss);
+                        sdf.Process2(raster, fragment, inSize, outSize, distance, ss);
 
                         atlas.Draw(fragment, cx * outSize, cy * outSize);
 
