@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace SDFFont
@@ -13,6 +14,8 @@ namespace SDFFont
 
             int ss = inSize / outSize;
 
+            var stopwatch = new Stopwatch();
+
             using (var font = new FontRasterizer(inSize))
             {
                 var sdf = new SDF();
@@ -23,7 +26,9 @@ namespace SDFFont
                 for (int cy = 0; cy < 16; cy++)
                     for (int cx = 0; cx < 16; cx++)
                     {
-                        Console.WriteLine("{0}/256 complete.", (cx + 16 * cy));
+                        stopwatch.Restart();
+                        Console.Write("Step {0}/256", (cx + 16 * cy));
+
                         string letter = Encoding.GetEncoding(1251).GetString(new byte[] { (byte)(cx + 16 * cy) });
 
                         font.Rasterize(raster, letter);
@@ -31,6 +36,9 @@ namespace SDFFont
                         var fragment = sdf.Process2(raster, inSize, outSize, distance, ss);
 
                         atlas.Draw(fragment, cx * outSize, cy * outSize);
+
+                        Console.WriteLine(" completed in {0} ms.", stopwatch.ElapsedMilliseconds);
+                        stopwatch.Stop();
                     }
 
                 atlas.Save("D:\\out.png");
