@@ -4,22 +4,26 @@ namespace SDFFont
 {
     class SDFLinear : ISDF
     {
-        private readonly short[,] _distx;
-        private readonly short[,] _disty;
+        private struct Point
+        {
+            public short X;
+            public short Y;
+        }
+
+        private readonly Point[,] _dist;
 
         public SDFLinear(int inSize)
         {
-            _distx = new short[inSize, inSize];
-            _disty = new short[inSize, inSize];
+            _dist = new Point[inSize, inSize];
         }
 
         public void Process(Raster input, Raster output, int inSize, int outSize, int distance, int ss)
         {
-            ProcessForward(input, output, inSize, distance, ss, _distx, _disty);
-            ProcessBackward(input, output, inSize, distance, ss, _distx, _disty);
+            ProcessForward(input, output, inSize, distance, ss, _dist);
+            ProcessBackward(input, output, inSize, distance, ss, _dist);
         }
 
-        void ProcessForward(Raster input, Raster output, int inSize, int distance, int ss, short[,] distx, short[,] disty)
+        void ProcessForward(Raster input, Raster output, int inSize, int distance, int ss, Point[,] dist)
         {
             for (int y = 0; y < inSize; y++)
                 for (int x = 0; x < inSize; x++)
@@ -51,8 +55,8 @@ namespace SDFFont
 
                         if (inner == inner2)
                         {
-                            dx += distx[ry, rx];
-                            dy += disty[ry, rx];
+                            dx += dist[ry, rx].X;
+                            dy += dist[ry, rx].Y;
                         }
 
                         var ddd = dx * dx + dy * dy;
@@ -75,12 +79,12 @@ namespace SDFFont
                     if (mx < short.MinValue) mx = short.MinValue;
                     if (my > short.MaxValue) my = short.MaxValue;
                     if (my < short.MinValue) my = short.MinValue;
-                    distx[y, x] = (short)mx;
-                    disty[y, x] = (short)my;
+                    dist[y, x].X = (short)mx;
+                    dist[y, x].Y = (short)my;
                 }
         }
 
-        void ProcessBackward(Raster input, Raster output, int inSize, int distance, int ss, short[,] distx, short[,] disty)
+        void ProcessBackward(Raster input, Raster output, int inSize, int distance, int ss, Point[,] dist)
         {
             for (int y = inSize - 1; y >= 0; y--)
                 for (int x = inSize - 1; x >= 0; x--)
@@ -113,8 +117,8 @@ namespace SDFFont
 
                         if (inner == inner2)
                         {
-                            dx += distx[ry, rx];
-                            dy += disty[ry, rx];
+                            dx += dist[ry, rx].X;
+                            dy += dist[ry, rx].Y;
                         }
 
                         var ddd = dx * dx + dy * dy;
@@ -137,8 +141,8 @@ namespace SDFFont
                     if (mx < short.MinValue) mx = short.MinValue;
                     if (my > short.MaxValue) my = short.MaxValue;
                     if (my < short.MinValue) my = short.MinValue;
-                    distx[y, x] = (short)mx;
-                    disty[y, x] = (short)my;
+                    dist[y, x].X = (short)mx;
+                    dist[y, x].Y = (short)my;
 
                     if (x % ss == ss / 2 && y % ss == ss / 2)
                     {
